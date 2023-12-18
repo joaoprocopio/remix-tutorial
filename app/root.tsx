@@ -50,6 +50,9 @@ export default function App() {
   const navigation = useNavigation();
   const submit = useSubmit();
   const [q, setQ] = useState(_q || "");
+  const searching =
+    navigation.location &&
+    new URLSearchParams(navigation.location.search).has("q");
 
   useEffect(() => {
     setQ(_q || "");
@@ -70,15 +73,18 @@ export default function App() {
                 id="q"
                 onChange={(event) => {
                   setQ(event.currentTarget.value);
-                  submit(event.currentTarget);
+                  submit(event.currentTarget, {
+                    replace: !q === null,
+                  });
                 }}
                 value={q}
                 aria-label="Search contacts"
+                className={searching ? "loading" : ""}
                 placeholder="Search"
                 type="search"
                 name="q"
               />
-              <div id="search-spinner" aria-hidden hidden={true} />
+              <div id="search-spinner" aria-hidden hidden={!searching} />
             </Form>
             <Form method="post">
               <button type="submit">New</button>
@@ -117,7 +123,9 @@ export default function App() {
 
         <div
           id="detail"
-          className={navigation.state === "loading" ? "loading" : ""}
+          className={
+            navigation.state === "loading" && !searching ? "loading" : ""
+          }
         >
           <Outlet />
         </div>
