@@ -1,4 +1,8 @@
-import type { LinksFunction, MetaFunction } from "@remix-run/node";
+import type {
+  ActionFunction,
+  LinksFunction,
+  MetaFunction,
+} from "@remix-run/node";
 import { json } from "@remix-run/node";
 import {
   Form,
@@ -11,8 +15,8 @@ import {
   ScrollRestoration,
   useLoaderData,
 } from "@remix-run/react";
-import appStylesHref from "./app.css";
-import { createEmptyContact, getContacts } from "./data";
+import appStylesHref from "~/app.css";
+import { createEmptyContact, getContacts } from "~/data";
 
 export const meta: MetaFunction = () => [
   { charSet: "utf-8" },
@@ -23,16 +27,16 @@ export const links: LinksFunction = () => [
   { rel: "stylesheet", href: appStylesHref },
 ];
 
+export const action: ActionFunction = async () => {
+  const contact = await createEmptyContact();
+
+  return json({ contact });
+};
+
 export const loader = async () => {
   const contacts = await getContacts();
 
   return json({ contacts });
-};
-
-export const action = async () => {
-  const contact = await createEmptyContact();
-
-  return json({ contact });
 };
 
 export default function App() {
