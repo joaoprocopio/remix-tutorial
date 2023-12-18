@@ -16,6 +16,7 @@ import {
   ScrollRestoration,
   useLoaderData,
   useNavigation,
+  useSubmit,
 } from "@remix-run/react";
 import { useEffect, useState } from "react";
 import appStylesHref from "~/app.css";
@@ -47,6 +48,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 export default function App() {
   const { contacts, _q } = useLoaderData<typeof loader>();
   const navigation = useNavigation();
+  const submit = useSubmit();
   const [q, setQ] = useState(_q || "");
 
   useEffect(() => {
@@ -68,6 +70,7 @@ export default function App() {
                 id="q"
                 onChange={(event) => {
                   setQ(event.currentTarget.value);
+                  submit(event.currentTarget);
                 }}
                 value={q}
                 aria-label="Search contacts"
