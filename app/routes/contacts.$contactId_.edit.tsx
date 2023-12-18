@@ -1,8 +1,23 @@
-import type { LoaderFunctionArgs } from "@remix-run/node";
-import { json } from "@remix-run/node";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
 
-import { getContact } from "../data";
+import { getContact, updateContact } from "../data";
+
+export const action = async ({ params, request }: ActionFunctionArgs) => {
+  if (!params.contactId)
+    throw new Response(null, {
+      status: 400,
+      statusText: "Missing contactId parameter",
+    });
+
+  const formData = await request.formData();
+  const updates = Object.fromEntries(formData);
+
+  await updateContact(params.contactId, updates);
+
+  return redirect(`/contacts/${params.contactId}`);
+};
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   if (!params.contactId)
