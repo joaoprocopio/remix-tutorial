@@ -17,7 +17,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
   if (!contact)
     throw new Response(null, {
       status: 404,
-      statusText: "User not found",
+      statusText: "Contact not found",
     });
 
   return json({ contact });
